@@ -1,0 +1,73 @@
+.loginCard {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1rem;
+  align-items: center;
+  background-color: #131324;
+}
+
+.loginCard .logo {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  justify-content: center;
+}
+.logo img {
+  height: 5rem;
+}
+.loginCard .logo h1 {
+  color: white;
+  text-transform: uppercase;
+}
+
+.loginCard form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  background-color: #00000076;
+  border-radius: 2rem;
+  padding: 5rem;
+}
+
+.loginCard input {
+  background-color: transparent;
+  padding: 1rem;
+  border: 0.1rem solid #4e0eff;
+  border-radius: 0.4rem;
+  color: white;
+  width: 100%;
+  font-size: 1rem;
+  &:focus {
+    border: 0.1rem solid #997af0;
+    outline: none;
+  }
+}
+
+.loginCard button {
+  background-color: #4e0eff;
+  color: white;
+  padding: 1rem 2rem;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 0.4rem;
+  font-size: 1rem;
+  text-transform: uppercase;
+  &:hover {
+    background-color: #4e0eff;
+  }
+}
+
+.loginCard .signUpUrl {
+  color: white;
+  text-transform: uppercase;
+}
+
+.loginCard .signUpUrl a {
+  color: #4e0eff;
+  text-decoration: none;
+  font-weight: bold;
+}
