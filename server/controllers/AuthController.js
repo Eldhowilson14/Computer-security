@@ -1,3 +1,4 @@
+const FriendsList = require("../models/FriendsListModel");
 const User = require("../models/userModel");
 const bcrypt = require("bcrypt");
 
@@ -33,7 +34,10 @@ module.exports.register = async (req, res, next) => {
       password: hashedPassword,
       publicKey,
     });
-
+    const emptyFriendsList = await FriendsList.create({
+      userId: user.id,
+      friends: [],
+    });
     delete user.password;
     return res.json({ status: true, user });
   } catch (ex) {
