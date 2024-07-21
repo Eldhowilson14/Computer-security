@@ -4,7 +4,7 @@ import ChatInput from "./ChatInput";
 import { Logout } from "./Logout";
 import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
-import { sendMessageRoute, recieveMessageRoute } from "../utils/routes";
+import { sendMessageRoute, recieveMessageRoute, relayRoutes } from "../utils/routes";
 import { Avatar, Box, Grid, Typography } from "@mui/material";
 import EncryptionService from "../utils/util";
 
@@ -12,65 +12,119 @@ export default function ChatContainer({ currentUser, currentChat, socket, hisPub
   const [messages, setMessages] = useState([]);
   const scrollRef = useRef();
   const [arrivalMessage, setArrivalMessage] = useState(null);
-  const [decryptionKey, setDecryptionKey] = useState(null);
-  const [ourDecryptionKey, setOurDecryptionKey] = useState(null);
 
-  useEffect(() => {
-    const myPrivateKey = localStorage.getItem(currentUser._id);
-    EncryptionService.getDecryptionKey(myPrivateKey, hisPublicKey).then(
-      (decryptionKey) => {
-        setDecryptionKey(decryptionKey);
-      }
-    );
+  // useEffect(() => {
+  //     axios.post(relayRoutes, { chatUserId: currentChat._id }).then((response) => {
+  //     const hisPublicKey = response.data.hisPublicKey;
+        
+  //     setHisPublicKey(hisPublicKey);
 
-    EncryptionService.getEncryptionKey(myPrivateKey, hisPublicKey).then(
-      (decryptionKey) => {
-        setOurDecryptionKey(decryptionKey);
-      }
-    );
-  }, []);
+  //     }).catch((error) => {
+  //       console.log(error);
+  //       console.log("error fetching publicKey");
+  //     })
+  // }, [currentChat])
+  
+  // useEffect(() => {
+  //   console.log(currentChat.user)
+  //   if(currentChat && hisPublicKey) {
+  //     const myPrivateKey = localStorage.getItem(currentUser._id);
+  //     EncryptionService.getDecryptionKey(myPrivateKey, hisPublicKey).then(
+  //       (decryptionKey) => {
+  //         setDecryptionKey(decryptionKey);
+  //       }
+  //     );
+  
+  //     EncryptionService.getEncryptionKey(myPrivateKey, hisPublicKey).then(
+  //       (decryptionKey) => {
+  //         setOurDecryptionKey(decryptionKey);
+  //       }
+  //     );
+  //   }
+  // }, [currentChat]);
 
-  useEffect(() => {
-    if (decryptionKey) {
-      const currentUser = JSON.parse(
-        localStorage.getItem("loop-chat-current-user")
-      );
-      // loading chats when a user's chat is clicked
-      axios
+  // useEffect(() => {
+  //   if (decryptionKey) {
+  //     const currentUser = JSON.parse(
+  //       localStorage.getItem("loop-chat-current-user")
+  //     );
+  //     // loading chats when a user's chat is clicked
+  //     axios
+  //       .post(recieveMessageRoute, {
+  //         from: currentUser._id,
+  //         to: currentChat._id,
+  //       })
+  //       .then(async (response) => {
+  //         const decryptedMessages = await Promise.all(
+  //           response.data.map(async (data) => {
+  //             let decryptedMessage = "";
+  //             if (data.from === currentUser._id) {
+  //               decryptedMessage = await EncryptionService.decryptMessage(
+  //                 data.message,
+  //                 ourDecryptionKey
+  //               );
+  //             } else {
+  //               decryptedMessage = await EncryptionService.decryptMessage(
+  //                 data.message,
+  //                 decryptionKey
+  //               );
+  //             }
+  //             return { ...data, message: decryptedMessage };
+  //           })
+  //         );
+  //         setMessages(decryptedMessages);
+  //       })
+  //       .catch((error) => {
+  //         console.error("error fetching and decrypting messages", error);
+  //       });
+  //   }
+  // }, [currentChat]);
+
+  useEffect(()=> {
+    axios
         .post(recieveMessageRoute, {
           from: currentUser._id,
           to: currentChat._id,
         })
         .then(async (response) => {
-          const decryptedMessages = await Promise.all(
+          const myPrivateKey = localStorage.getItem(currentUser._id);
+
+          Promise.all(
             response.data.map(async (data) => {
               let decryptedMessage = "";
               if (data.from === currentUser._id) {
+                const ourDecryptionKey = await EncryptionService.getEncryptionKey(myPrivateKey, hisPublicKey);
+
                 decryptedMessage = await EncryptionService.decryptMessage(
                   data.message,
                   ourDecryptionKey
                 );
               } else {
+                const decryptionKey = await EncryptionService.getDecryptionKey(myPrivateKey, hisPublicKey);
+
                 decryptedMessage = await EncryptionService.decryptMessage(
                   data.message,
                   decryptionKey
                 );
               }
+
               return { ...data, message: decryptedMessage };
             })
-          );
-          setMessages(decryptedMessages);
+          ).then((decryptedMessages) => {
+            setMessages(decryptedMessages);
+          })
         })
         .catch((error) => {
           console.error("error fetching and decrypting messages", error);
         });
-    }
-  }, [currentChat, decryptionKey]);
+  })
 
   const handleSendMsg = async (msg) => {
-    const data = await JSON.parse(
-      localStorage.getItem("loop-chat-current-user")
-    );
+      socket.current.emit("send-msg", {
+      to: currentChat._id,
+      from: currentUser._id,
+      msg: msg,
+    });
 
     const myPrivateKey = localStorage.getItem(currentUser._id);
 
@@ -84,13 +138,8 @@ export default function ChatContainer({ currentUser, currentChat, socket, hisPub
       encryptionKey
     );
 
-    socket.current.emit("send-msg", {
-      to: currentChat._id,
-      from: data._id,
-      msg: encryptedMessage,
-    });
     await axios.post(sendMessageRoute, {
-      from: data._id,
+      from: currentUser._id,
       to: currentChat._id,
       message: encryptedMessage,
     });
@@ -101,20 +150,16 @@ export default function ChatContainer({ currentUser, currentChat, socket, hisPub
   };
 
   useEffect(() => {
-    if (socket.current && decryptionKey) {
+    if (socket.current) {
       socket.current.on("msg-recieve", async (msg) => {
         try {
-          const decryptedMessage = await EncryptionService.decryptMessage(
-            msg,
-            decryptionKey
-          );
-          setArrivalMessage({ fromSelf: false, message: decryptedMessage });
+          setArrivalMessage({ fromSelf: false, message: msg });
         } catch (error) {
           console.log(error);
         }
       });
     }
-  }, [decryptionKey]);
+  }, []);
 
   useEffect(() => {
     arrivalMessage && setMessages((prev) => [...prev, arrivalMessage]);
@@ -157,7 +202,7 @@ export default function ChatContainer({ currentUser, currentChat, socket, hisPub
           overflow: "auto",
         }}
       >
-        {decryptionKey && messages.map((message) => {
+        {messages.map((message) => {
           return (
             <div ref={scrollRef} key={uuidv4()}>
               <div

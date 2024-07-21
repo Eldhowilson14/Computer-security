@@ -29,7 +29,7 @@ export default function Chat() {
   useEffect(() => {
     if (currentUser) {
       socket.current = io(host, {
-        withCredentials: true
+        withCredentials: true,
       });
       socket.current.emit("add-user", currentUser._id);
     }
@@ -52,17 +52,18 @@ export default function Chat() {
     getFriendsList();
   }, [currentUser]);
   const handleChatChange = async (chat) => {
-    setCurrentChat(chat);
-    try {
-      const response = await axios.post(relayRoutes, { chatUserId: chat._id });
-      const hisPublicKey = response.data.hisPublicKey;
+    axios
+      .post(relayRoutes, { chatUserId: chat._id })
+      .then((response) => {
+        const hisPublicKey = response.data.hisPublicKey;
 
-      
-      setHisPublicKey(hisPublicKey);
-    } catch (error) {
-      console.log(error);
-      console.log("error fetching publicKey");
-    }
+        setHisPublicKey(hisPublicKey);
+        setCurrentChat(chat);
+      })
+      .catch((error) => {
+        console.log(error);
+        console.log("error fetching publicKey");
+      });
   };
   return (
     <Box
@@ -95,7 +96,7 @@ export default function Chat() {
           getFriendsList={getFriendsList}
           currentUser={currentUser}
         />
-        {currentChat === undefined || !hisPublicKey ? (
+        {currentChat === undefined ? (
           <Welcome />
         ) : (
           <ChatContainer
