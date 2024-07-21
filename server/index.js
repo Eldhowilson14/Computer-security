@@ -5,6 +5,13 @@ const mongoose = require("mongoose");
 
 require("dotenv").config();
 
+function handleShutDown(signal){
+  console.log(`recieved signal ${signal}.`)
+}
+
+process.on('SIGINT',handleShutDown)
+process.on('SIGTERM',handleShutDown)
+
 const app = express();
 const authRouter = require("./routes/authRouter");
 const messageRouter = require("./routes/messageRouter");

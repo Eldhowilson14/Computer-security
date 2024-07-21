@@ -5,6 +5,13 @@ const relayRoutes = require("./routes/relay");
 const app = express();
 require("dotenv").config();
 
+function handleShutDown(signal){
+  console.log(`recieved signal ${signal}.`)
+}
+
+process.on('SIGINT',handleShutDown)
+process.on('SIGTERM',handleShutDown)
+
 app.use(cors());
 app.use(express.json());
 
