@@ -1,4 +1,5 @@
 const User = require("../models/UserModel");
+const FriendsList = require("../models/FriendsListModel");
 
 module.exports.getAllUsers = async (req, res, next) => {
     try {
@@ -34,3 +35,22 @@ module.exports.getAllUsers = async (req, res, next) => {
       next(ex);
     }
   };
+
+  module.exports.getAllFriends = async (req, res, next) => {
+    try {
+      const { userId } = req.params;
+      const friendsList = await FriendsList.findOne({ userId });
+      const users = await User.find({
+        _id: { $in: friendsList.friends.map(userId => Object(userId)) }
+      }).select([
+        "email",
+        "username",
+        "avatarImage",
+        "_id",
+      ]);
+  
+      return res.json(users);
+    } catch (ex) {
+      next(ex);
+    }
+  }
