@@ -5,6 +5,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { registerRoute } from "../utils/routes";
 import { Box, Input, Typography, Button } from "@mui/material";
+import EncryptionService from "../utils/util";
 
 export default function Register() {
   const navigate = useNavigate();
