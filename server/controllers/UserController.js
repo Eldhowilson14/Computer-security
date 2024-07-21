@@ -54,3 +54,22 @@ module.exports.getAllUsers = async (req, res, next) => {
       next(ex);
     }
   }
+
+  module.exports.getNewFriendsList = async (req, res, next) => {
+    try {
+      const { userId } = req.params;
+      const friendsList = await FriendsList.findOne({ userId });
+      const users = await User.find({
+        _id: { $nin: [...friendsList.friends.map(userId => Object(userId)), ...friendsList.reqSent.map(userId => Object(userId)), ...friendsList.reqReceived.map(userId => Object(userId)), Object(userId)] }
+      }).select([
+        "email",
+        "username",
+        "avatarImage",
+        "_id",
+      ]);
+  
+      return res.json(users);
+    } catch (ex) {
+      next(ex);
+    }
+  }
