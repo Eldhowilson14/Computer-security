@@ -1,0 +1,228 @@
+.message {
+  display: flex;
+  align-items: center;
+}
+
+.content {
+  max-width: 40%;
+  overflow-wrap: break-word;
+  padding: 1rem;
+  font-size: 1.1rem;
+  border-radius: 1rem;
+  color: #d1d1d1;
+  @media screen and (min-width: 720px) and (max-width: 1080px) {
+    max-width: 70%;
+  }
+}
+
+.sended {
+  justify-content: flex-end;
+  .content {
+    background-color: #4f04ff21;
+  }
+}
+.recieved {
+  justify-content: flex-start;
+  .content {
+    background-color: #9900ff20;
+  }
+}
+
+.userName {
+  color: white;
+}
+
+.avatar {
+  height: 3rem;
+}
+
+.chatHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2rem;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.brand img {
+  height: 2rem;
+}
+.brand h3 {
+  color: white;
+  text-transform: uppercase;
+}
+
+.dashboardChats {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-y: auto; /* Use overflow-y for vertical scrolling only */
+  gap: 0.8rem;
+}
+
+.dashboardChats::-webkit-scrollbar {
+  width: 0.2rem;
+}
+
+.dashboardChats::-webkit-scrollbar-thumb {
+  background-color: #ffffff39;
+  width: 0.1rem;
+  border-radius: 1rem;
+}
+
+.dashboardChats .chat {
+  background-color: #ffffff34;
+  min-height: 5rem;
+  border-radius: 0.2rem;
+  padding: 0.4rem;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  transition: 0.5s ease-in-out;
+  cursor: pointer;
+  width: 100%;
+}
+
+.dashboardChats .chat .avatar img {
+  height: 3rem;
+}
+
+.dashboardChats .chat .username {
+  color: white;
+}
+
+.selected {
+  background-color: #9a86f3 !important;
+}
+
+.currentUser {
+  background-color: #0d0d30;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+}
+
+.currentUser .avatar img {
+  height: 4rem;
+  max-inline-size: 100%;
+}
+
+.currentUser .username {
+  color: white;
+  font-size: 1.4rem;
+}
+
+@media screen and (min-width: 720px) and (max-width: 1080px) {
+  .currentUser {
+    gap: 0.5rem !important;
+  }
+  .currentUser .username {
+    font-size: 1rem !important;
+  }
+}
+
+.dashboardChatsTopBar {
+  background-color: #0d0d30;
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 1.5rem;
+}
+
+.dashboardChatsTopBar h5,
+button {
+  color: white;
+  font-size: 1rem;
+}
+
+.dashboardChatsTopBar button {
+  background-color: #9a86f3;
+  font-size: 0.8rem;
+  font-weight: 600;
+  width: 100%;
+}
+
+.dashboardChatsTopBar button:hover {
+  background-color: #0a0a13;
+}
+
+.formContainer {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1rem;
+  align-items: center;
+  background-color: #131324;
+}
+
+.formContainer .brand {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  justify-content: center;
+}
+.brand img {
+  height: 5rem;
+}
+.brand h1 {
+  color: white;
+  text-transform: uppercase;
+}
+
+.formContainer form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  background-color: #00000076;
+  border-radius: 2rem;
+  padding: 5rem;
+}
+
+.formContainer input {
+  background-color: transparent;
+  padding: 1rem;
+  border: 0.1rem solid #4e0eff;
+  border-radius: 0.4rem;
+  color: white;
+  width: 100%;
+  font-size: 1rem;
+  &:focus {
+    border: 0.1rem solid #997af0;
+    outline: none;
+  }
+}
+
+.formContainer button {
+  background-color: #4e0eff;
+  color: white;
+  padding: 1rem 2rem;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 0.4rem;
+  font-size: 1rem;
+  text-transform: uppercase;
+  &:hover {
+    background-color: #4e0eff;
+  }
+}
+
+.formContainer .formTypography {
+  color: white;
+  text-transform: uppercase;
+  a {
+    color: #4e0eff;
+    text-decoration: none;
+    font-weight: bold;
+  }
+}
