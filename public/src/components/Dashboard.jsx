@@ -13,6 +13,7 @@ import {
   ListItemText,
   Typography,
 } from "@mui/material";
+import AddFriendsDialog from "./AddFriendsDialog";
 
 export default function Dashboard({ contacts, changeChat, currentUser, getFriendsList}) {
   const [currentUserName, setCurrentUserName] = useState(undefined);
@@ -140,6 +141,13 @@ export default function Dashboard({ contacts, changeChat, currentUser, getFriend
               </Typography>
             </Grid>
           </Box>
+          <AddFriendsDialog
+            handleClickOpen={handleClickOpen}
+            handleClose={handleClose}
+            open={open}
+            currentUser={currentUser}
+            getFriendsList={getFriendsList}
+          />
         </>
       )}
     </>
