@@ -70,3 +70,17 @@ module.exports.getNewFriendsList = async (req, res, next) => {
     next(ex);
   }
 };
+
+module.exports.getRequestsSentList = async (req, res, next) => {
+  try {
+    const { userId } = req.params;
+    const friendsList = await FriendsList.findOne({ userId });
+    const users = await User.find({
+      _id: { $in: [...friendsList.reqSent.map((userId) => Object(userId))] },
+    }).select(["email", "username", "avatarImage", "_id"]);
+
+    return res.json(users);
+  } catch (ex) {
+    next(ex);
+  }
+};
