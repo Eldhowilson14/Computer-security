@@ -25,7 +25,12 @@ export const AcceptRequestList = ({ currentUser, getFriendsList }) => {
     }, []);
 
     const handleAcceptRequest = async (friendId) => {
-      console.log("accept request")
+      const url = acceptFriendRequest.replace("{userId}", currentUser._id);
+      await axios.post(url, {
+        friendId
+      });
+      getIncomingRequests();
+      getFriendsList();
     }
   
     return (
