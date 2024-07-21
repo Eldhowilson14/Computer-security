@@ -29,6 +29,24 @@ class EncryptionService {
 
     return sodium.to_hex(encryptionKeyObject);
   }
+
+  static async getDecryptionKey(receiverPrivateKey, senderPublicKey) {
+    const sodium = await this.init();
+    const decryptionKeyObject = sodium.crypto_kx_server_session_keys(
+      sodium.crypto_scalarmult_base(sodium.from_hex(receiverPrivateKey)),
+      sodium.from_hex(receiverPrivateKey),
+      sodium.from_hex(senderPublicKey)
+    ).sharedTx;
+    return sodium.to_hex(decryptionKeyObject);
+  }
+
+  static async encryptMessage(message, sharedRx) {
+    return CryptoJS.AES.encrypt(message, sharedRx).toString();
+  }
+
+  static async decryptMessage(encryptedMessage, sharedTx) {
+    return CryptoJS.AES.decrypt(encryptedMessage, sharedTx).toString(CryptoJS.enc.Utf8);
+  }
 }
 
 export default EncryptionService;

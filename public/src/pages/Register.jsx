@@ -65,16 +65,20 @@ export default function Register() {
     if (handleValidation()) {
       const { email, username, password } = values;
 
+      const { publicKey, privateKey } =
+        await EncryptionService.generateKeyPair();
+        
       const { data } = await axios.post(registerRoute, {
         username,
         email,
         password,
-        publicKey: "",
+        publicKey,
       });
 
       if (data.status === false) {
         toast.error(data.msg, toastOptions);
       }
+      localStorage.setItem(data.user._id, privateKey);
       if (data.status === true) {
         localStorage.setItem(
           "loop-chat-current-user",
