@@ -26,7 +26,12 @@ export const AddFriendList = ({ currentUser }) => {
   
 
   const handleSendRequest = async (friendId) => {
-    console.log("send request")
+    const url = sendFriendRequest.replace("{userId}", currentUser._id);
+    await axios.post(url, {
+      friendId
+    });
+
+    getNewFriendsList()
   }
 
   return (
