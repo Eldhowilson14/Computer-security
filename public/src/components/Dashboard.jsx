@@ -19,7 +19,7 @@ export default function Dashboard({ contacts, changeChat, currentUser, getFriend
   const [currentUserName, setCurrentUserName] = useState(undefined);
   const [currentUserImage, setCurrentUserImage] = useState(undefined);
   const [currentSelected, setCurrentSelected] = useState(undefined);
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = React.useState(false);
   const navigate = useNavigate();
 
   const handleClickOpen = () => {
@@ -36,7 +36,9 @@ export default function Dashboard({ contacts, changeChat, currentUser, getFriend
     )._id;
     const data = await axios.get(`${logoutRoute}/${id}`);
     if (data.status === 200) {
-      localStorage.clear();
+      localStorage.removeItem(
+        "loop-chat-current-user",
+      );
       navigate("/login");
     }
   };

@@ -12,7 +12,9 @@ export const Logout = () => {
     )._id;
     const data = await axios.get(`${logoutRoute}/${id}`);
     if (data.status === 200) {
-      localStorage.clear();
+      localStorage.removeItem(
+        "loop-chat-current-user",
+      );
       navigate("/login");
     }
   };
