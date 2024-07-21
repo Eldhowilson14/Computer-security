@@ -18,6 +18,17 @@ class EncryptionService {
       privateKey: sodium.to_hex(key.privateKey),
     };
   }
+
+  static async getEncryptionKey(senderPrivateKey, receiverPublicKey) {
+    const sodium = await this.init();
+    const encryptionKeyObject = sodium.crypto_kx_client_session_keys(
+      sodium.crypto_scalarmult_base(sodium.from_hex(senderPrivateKey)),
+      sodium.from_hex(senderPrivateKey),
+      sodium.from_hex(receiverPublicKey)
+    ).sharedRx;
+
+    return sodium.to_hex(encryptionKeyObject);
+  }
 }
 
 export default EncryptionService;
