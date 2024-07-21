@@ -1,6 +1,13 @@
 const FriendsList = require("../models/FriendsListModel");
 const User = require("../models/UserModel");
 const bcrypt = require("bcrypt");
+const firebaseAdmin = require("firebase-admin");
+
+firebaseAdmin.initializeApp({
+  credential: firebaseAdmin.credential.cert(
+    require("../firebase-service-account.json")
+  ),
+});
 
 module.exports.login = async (req, res, next) => {
   try {
@@ -41,6 +48,29 @@ module.exports.register = async (req, res, next) => {
     delete user.password;
     return res.json({ status: true, user });
   } catch (ex) {
+    next(ex);
+  }
+};
+
+module.exports.googleAuth = async (req, res, next) => {
+  try {
+    const { idToken, publicKey } = req.body;
+    const decodedToken = await firebaseAdmin.auth().verifyIdToken(idToken);
+    const { uid, email } = decodedToken;
+    let user = await User.findOne({ uid });
+    if (!user) {
+      const username = email.split("@")[0];
+      user = await User.create({ uid, email, username, publicKey });
+      const emptyFriendsList = await FriendsList.create({
+        userId: user.id,
+        friends: [],
+      })
+      
+      return res.json({ status: true, user, new: true });
+    }
+    return res.json({ status: true, user, new: false });
+  } catch (ex) {
+    console.error("Error verifying ID token:", ex);
     next(ex);
   }
 };
