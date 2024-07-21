@@ -11,4 +11,6 @@ export const addFriendsList = `${host}/api/user/{userId}/new-friends`;
 export const incomingRequestList = `${host}/api/user/{userId}/incoming-requests`;
 export const sentRequestList = `${host}/api/user/{userId}/requests-sent`;
 export const friendsList = `${host}/api/user/{userId}/friends`;
+export const sendFriendRequest = `${host}/api/user/{userId}/send-request`;
+export const acceptFriendRequest = `${host}/api/user/{userId}/accept-request`;
 export const relayRoutes = `${relayHost}/api/relay/relay`;
