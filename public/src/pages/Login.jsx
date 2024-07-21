@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { auth, provider } from "../config";
+import { signInWithPopup } from "firebase/auth";
 import { useNavigate, Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { loginRoute } from "../utils/routes";
+import { loginRoute, googleAuthRoute } from "../utils/routes";
 import { Box } from "@mui/material";
 import { Button } from "@mui/material";
 import { Typography } from "@mui/material";
+import EncryptionService from "../utils/util";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -62,7 +65,34 @@ export default function Login() {
   };
 
   const HandleGoogleSignIn = async () => {
-    console.log("signin with google")
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      const idToken = await user.getIdToken();
+      const { publicKey, privateKey } = await EncryptionService.generateKeyPair()
+
+      const { data } = await axios.post(googleAuthRoute, {
+        idToken,
+        publicKey,
+      });
+      if (data.status === false) {
+        toast.error(data.msg, toastOptions);
+      }
+
+      if (data.new === true) {
+        localStorage.setItem(data.user._id, privateKey);
+      }
+      if (data.status === true) {
+        localStorage.setItem(
+          "loop-chat-current-user",
+          JSON.stringify(data.user)
+        );
+        navigate("/");
+      }
+    } catch (error) {
+      console.error("error signing up with google", error);
+      toast.error("Google Sign-Up failed. Please try again.", toastOptions);
+    }
   };
 
   return (

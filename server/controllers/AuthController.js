@@ -1,5 +1,5 @@
 const FriendsList = require("../models/FriendsListModel");
-const User = require("../models/userModel");
+const User = require("../models/UserModel");
 const bcrypt = require("bcrypt");
 
 module.exports.login = async (req, res, next) => {
