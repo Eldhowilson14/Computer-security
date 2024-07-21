@@ -39,6 +39,10 @@ class EncryptionService {
     ).sharedTx;
     return sodium.to_hex(decryptionKeyObject);
   }
+
+  static async encryptMessage(message, sharedRx) {
+    return CryptoJS.AES.encrypt(message, sharedRx).toString();
+  }
 }
 
 export default EncryptionService;
