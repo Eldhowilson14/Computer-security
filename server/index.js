@@ -7,11 +7,15 @@ require("dotenv").config();
 
 const app = express();
 const authRouter = require("./routes/authRouter");
+const messageRouter = require("./routes/messageRouter");
+const userRouter = require("./routes/userRouter");
 
 app.use(cors());
 app.use(express.json());
 
 app.use("/api/auth", authRouter);
+app.use("/api/messages", messageRouter);
+app.use("/api/user", userRouter);
 
 mongoose
   .connect(process.env.DATABASE_URL, {

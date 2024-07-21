@@ -1,6 +1,7 @@
 const {
   login,
-  googleAuth
+  googleAuth,
+  logOut
 } = require("../controllers/AuthController");
 
 const router = require("express").Router();
