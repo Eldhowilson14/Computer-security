@@ -127,3 +127,35 @@ module.exports.sendFriendRequest = async (req, res, next) => {
     next(ex);
   }
 };
+
+module.exports.acceptFriendRequest = async (req, res, next) => {
+  try {
+    const { userId } = req.params;
+    const { friendId } = req.body;
+    const friend = await User.findOne({ _id: friendId });
+    if (!friend)
+      return res.json({ msg: `User with id ${friendId} not exist`, status: false });
+    
+    // update fro
+    await FriendsList.findOneAndUpdate(
+      { userId },
+      { $push: { friends: friendId } },
+    )
+    await FriendsList.findOneAndUpdate(
+      { userId: friendId },
+      { $push: { friends: userId } },
+    )
+    await FriendsList.findOneAndUpdate(
+      { userId },
+      { $pull: { reqReceived: friendId } },
+    )
+    await FriendsList.findOneAndUpdate(
+      { userId: friendId },
+      { $pull: { reqSent: userId } },
+    )
+
+    return res.json({ status: true });
+  } catch (ex) {
+    next(ex);
+  }
+};
