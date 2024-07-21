@@ -43,6 +43,10 @@ class EncryptionService {
   static async encryptMessage(message, sharedRx) {
     return CryptoJS.AES.encrypt(message, sharedRx).toString();
   }
+
+  static async decryptMessage(encryptedMessage, sharedTx) {
+    return CryptoJS.AES.decrypt(encryptedMessage, sharedTx).toString(CryptoJS.enc.Utf8);
+  }
 }
 
 export default EncryptionService;
