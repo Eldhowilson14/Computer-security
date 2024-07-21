@@ -6,6 +6,6 @@ export const googleAuthRoute = `${host}/api/auth/google-auth`;
 export const logoutRoute = `${host}/api/auth/logout`;
 export const sendMessageRoute = `${host}/api/messages/addmsg`;
 export const recieveMessageRoute = `${host}/api/messages/getmsg`;
-export const setAvatarRoute = `${host}/api/auth/setavatar`;
+export const setAvatarRoute = `${host}/api/user/setavatar`;
 export const friendsList = `${host}/api/user/{userId}/friends`;
 export const relayRoutes = `${relayHost}/api/relay/relay`;
