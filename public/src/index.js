@@ -5,13 +5,6 @@ import './assets/styles.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
-function handleShutDown(signal){
-  console.log(`recieved signal ${signal}.`)
-}
-
-process.on('SIGINT',handleShutDown)
-process.on('SIGTERM',handleShutDown)
-
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
