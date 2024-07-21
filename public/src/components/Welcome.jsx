@@ -13,15 +13,17 @@ export default function Welcome() {
   }, []);
   return (
     <Box sx={{
-      display: "flex",
+    display: "flex",
     justifyContent: "center",
     alignItems: "center",
     color: "white",
-    flexFirection: "column",
+    flexDirection: "column",
     }}>
-      <img src={Robot} alt="" />
+      <img style={{
+        height: "20rem"
+      }} src={Robot} alt="" />
       <h1>
-        Welcome, <span>{userName}!</span>
+        Welcome, <span style={{color: "#4e0eff"}}>{userName}!</span>
       </h1>
       <h3>Please select a chat to Start messaging.</h3>
 

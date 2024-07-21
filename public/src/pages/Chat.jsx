@@ -6,6 +6,7 @@ import { friendsList, host, relayRoutes } from "../utils/routes";
 import Dashboard from "../components/Dashboard";
 import Welcome from "../components/Welcome";
 import { Box } from "@mui/material";
+import ChatContainer from "../components/ChatContainer";
 
 export default function Chat() {
   const navigate = useNavigate();
@@ -36,7 +37,7 @@ export default function Chat() {
 
   const getFriendsList = () => {
     if (currentUser) {
-      const url = friendsList.replace('{userId}', currentUser._id)
+      const url = friendsList.replace("{userId}", currentUser._id);
       if (currentUser.isAvatarImageSet) {
         axios.get(url).then((data) => {
           setContacts(data.data);
@@ -45,13 +46,12 @@ export default function Chat() {
         navigate("/setAvatar");
       }
     }
-  }
+  };
 
   useEffect(() => {
     getFriendsList();
   }, [currentUser]);
   const handleChatChange = async (chat) => {
-
     setCurrentChat(chat);
     try {
       const response = await axios.post(relayRoutes, { chatUserId: chat._id });
@@ -89,11 +89,21 @@ export default function Chat() {
           },
         }}
       >
-        <Dashboard contacts={contacts} changeChat={handleChatChange} getFriendsList={getFriendsList} currentUser={currentUser}/>
-        {currentChat === undefined || !hisPublicKey  ? (
+        <Dashboard
+          contacts={contacts}
+          changeChat={handleChatChange}
+          getFriendsList={getFriendsList}
+          currentUser={currentUser}
+        />
+        {currentChat === undefined || !hisPublicKey ? (
           <Welcome />
         ) : (
-          <></>
+          <ChatContainer
+            currentUser={currentUser}
+            currentChat={currentChat}
+            socket={socket}
+            hisPublicKey={hisPublicKey}
+          />
         )}
       </Box>
     </Box>
