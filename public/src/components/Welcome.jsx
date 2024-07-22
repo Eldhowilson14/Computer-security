@@ -5,11 +5,16 @@ import { Box } from "@mui/material";
 export default function Welcome() {
   const [userName, setUserName] = useState("");
   useEffect(() => {
-    setUserName(
-       JSON.parse(
-        localStorage.getItem("loop-chat-current-user")
-      ).username
-    );
+    const user = JSON.parse(
+      localStorage.getItem("loop-chat-current-user")
+    )
+
+    if (user) {
+      setUserName(
+        user.username
+      );
+
+    }
   }, []);
   return (
     <Box sx={{

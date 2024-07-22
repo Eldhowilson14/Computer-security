@@ -2,4 +2,4 @@ TODO.md
 **/node_modules
 
 # server/firebase-service-account.json
-!public/build/*
+# !public/build/*

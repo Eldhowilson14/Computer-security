@@ -90,13 +90,13 @@ export default function Chat() {
           },
         }}
       >
-        <Dashboard
+        {currentUser && (<Dashboard
           contacts={contacts}
           changeChat={handleChatChange}
           getFriendsList={getFriendsList}
           currentUser={currentUser}
-        />
-        {currentChat === undefined ? (
+        />)}
+        {currentChat === undefined || !currentUser ? (
           <Welcome />
         ) : (
           <ChatContainer
