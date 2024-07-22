@@ -46,7 +46,7 @@ const server = app.listen(process.env.PORT, () =>
 
 const io = socket(server, {
   cors: {
-    origin: "https://loopchat.z16.web.core.windows.net/",
+    origin: "http://20.13.153.6:3000",
     credentials: true,
   },
 });
